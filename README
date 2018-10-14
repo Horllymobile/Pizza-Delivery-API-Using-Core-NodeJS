@@ -1,0 +1,166 @@
+Pizza Delivery API in NodeJS
+
+Hello, This is a pizza delivery API developed in NodeJS for the HomeAssignment#2 for the course.
+I loved the course and working in this assignment. The tasks accomplished in this API are below with
+the API paths.
+
+API \users:
+
+Methods:
+	GET: Gets the users details created in the application. email should be provided in the QueryString for the user and
+	  'token' in the header.
+	PUT: The method is used to update the details of the user. You can update firstName, lastName, and password. The email
+	 is the mandatory field for the update.
+	POST : The method is used to add a user to the system. The data should be sent to the method call as payload. Below is
+	 the format of the data which should be passed in the payload of the method call.
+	 
+	 {
+	  "firstName": "Vikram",
+	  "lastName": "Chaudhary",
+	  "streetAddress": "#1 9th Cross",
+	  "password": "test123",
+	  "email": "vikram@test.com"
+	}
+	 
+	 
+	DELETE: The method is used to delete the user from the system. The user can be deleted by providing the email as
+	querystring and password in the header fields.
+
+API  \login:
+
+Methods:
+
+	POST:
+
+	Only post is valid for this api.
+
+	The user can login to the app to order the pizza. The user has to provide the email and password in the payload of the
+	POST request. The format should be as below.
+
+	{
+	 "email" : "vikram@test.com",
+	 "password" : "test123"
+	}
+
+	Once the user successfully logs in the system. He will get the menu items as well as the token valid for next 1 hour.
+	The response will be in below format.
+
+	{
+	 "data": {
+	  "email": "vikram@test.com",
+	  "id": "6c7whoy15xz094vsjz1d",
+	  "expires": 1538997627637
+	 },
+	 "menuItems": {
+	  "Pizza": {
+	   "Name": "LargePizza",
+	   "UnitPrice": 80
+	  },
+	  "SmallPizza": {
+	   "Name": "SmallPizza",
+	   "UnitPrice": 40
+	  },
+	  "MediumPizza": {
+	   "Name": "MediumPizza",
+	   "UnitPrice": 60
+	  },
+	  "Coke": {
+	   "Name": "Coke",
+	   "UnitPrice": 40
+	  },
+	  "Pepsi": {
+	   "Name": "Pepsi",
+	   "UnitPrice": 40
+	  }
+	 }
+	}
+
+API  \items:
+
+Methods:
+	POST:
+
+	Only post method is valid for this API.
+	Send the email and item to be added to the cart in the query string as shown below.
+
+	http://localhost:3000/items?email=vikram@test.com&item=LargePizza
+
+	And the token should be sent as part of the header.
+
+	If you are successfully able to add the item you should get the response from the API as shown below
+
+	{
+	 "cart": [
+	  {
+	   "Name": "LargePizza",
+	   "UnitPrice": 80
+	  }
+	 ]
+	}
+
+	In the next API call to add other item, the above content should be part of the payload with other item.
+
+	API : http://localhost:3000/items?email=vikram@test.com&item=Coke
+	Payload: {
+	 "cart": [
+	  {
+	   "Name": "LargePizza",
+	   "UnitPrice": 80
+	  }
+	 ]
+	}
+
+	And the response would be:
+
+	{
+	 "cart": [
+	  {
+	   "Name": "LargePizza",
+	   "UnitPrice": 80
+	  },
+	  {
+	   "Name": "Coke",
+	   "UnitPrice": 40
+	  }
+	 ]
+	}
+
+API /checkout
+
+Methods:
+	POST:
+
+	The method is used to make the payment for all the selected items to the Stripe gateway.
+	Mandatory is the email in querystringobject and token in the header.
+	http://localhost:3000/checkout?email=vikram@chaudhary.com
+
+	And payload of all the items as shown below.
+
+	{
+	 "cart": [
+	  {
+	   "Name": "LargePizza",
+	   "UnitPrice": 80
+	  },
+	  {
+	   "Name": "Coke",
+	   "UnitPrice": 40
+	  }
+	 ]
+	}
+
+	Once the payload is successful we will send the receipt to the user using the provided user email by mailgun API.
+
+API /logout:
+
+Methods: 
+
+	GET: Once you are done with the ordering and payment for your orders. You can logout from the application.
+	YOu need to provide the email in the query string and token in the header. 
+	
+	The query string will look like as below:
+
+	http://localhost:3000/checkout?email=vikram@chaudhary.com
+
+	On successful completion of the logout you should get 200 as the status code.
+	
